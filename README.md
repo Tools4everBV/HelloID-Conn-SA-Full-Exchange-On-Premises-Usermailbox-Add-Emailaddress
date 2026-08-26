@@ -1,61 +1,97 @@
-<!-- Description -->
+# HelloID-Conn-SA-Full-Exchange-On-Premises-Usermailbox-Add-Emailaddress
+
+| :information_source: Information                                                                                                                                                                                                                                                                                                                                                          |
+| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| This repository contains the connector and configuration code only. The implementer is responsible for acquiring the connection details such as username, password, certificate, etc. You might even need to sign a contract or agreement with the supplier before implementing this connector. Please contact the client's application manager to coordinate the connector requirements. |
+
 ## Description
-This HelloID Service Automation Delegated Form provides the functionality to add an extra emailaddress to a mailbox. The following options are available:
- 1. Give a name to lookup a mailbox
- 2. The result will show you a list of mailboxes. You will need to select to correct one
- 3. Enter the new email address you want to add,
- 4. The Delegated Form verfiy if the email address is unique or it will find a unique address
 
-## Versioning
-| Version | Description | Date |
-| - | - | - |
-| 1.0.2   | Added version number and updated code for SA-agent and auditlogging | 2022/08/24  |
-| 1.0.1   | Added version number and updated all-in-one script | 2021/11/16  |
-| 1.0.0   | Initial release | 2021/04/29  |
+_HelloID-Conn-SA-Full-Exchange-On-Premises-Usermailbox-Add-Emailaddress_ is a template designed for use with HelloID Service Automation (SA) Delegated Forms. It can be imported into HelloID and customized according to your requirements.
 
-<!-- TABLE OF CONTENTS -->
-## Table of Contents
-* [Description](#description)
-* [All-in-one PowerShell setup script](#all-in-one-powershell-setup-script)
-  * [Getting started](#getting-started)
-* [Post-setup configuration](#post-setup-configuration)
-* [Manual resources](#manual-resources)
+By using this delegated form, you can add additional email addresses to Exchange On-Premises user mailboxes. The following options are available:
 
+1.  Search and select a user mailbox by name, alias, or primary SMTP address
+2.  Select the email domain from accepted mail domains
+3.  Enter the email prefix for the new email address
+4.  The email address is validated for uniqueness across all recipients
+5.  The new email address is added to the selected user mailbox
+6.  All changes are logged with detailed audit information
 
-## All-in-one PowerShell setup script
-The PowerShell script "createform.ps1" contains a complete PowerShell script using the HelloID API to create the complete Form including user defined variables, tasks and data sources.
+## Getting started
 
- _Please note that this script asumes none of the required resources do exists within HelloID. The script does not contain versioning or source control_
+### Requirements
 
+- **Exchange On-Premises Environment**:<br>
+  A working Exchange On-Premises environment with remote PowerShell access enabled. The Exchange server must be accessible from the network where the HelloID agent is running.
 
-### Getting started
-Please follow the documentation steps on [HelloID Docs](https://docs.helloid.com/hc/en-us/articles/360017556559-Service-automation-GitHub-resources) in order to setup and run the All-in one Powershell Script in your own environment.
+- **Exchange Admin Credentials**:<br>
+  Administrative credentials with sufficient permissions to query mailboxes, accepted domains, and modify mailbox email addresses. The account must have permissions to execute Get-Mailbox, Get-Recipient, Get-AcceptedDomain, and Set-Mailbox cmdlets.
 
+- **Network Access**:<br>
+  Network connectivity from the HelloID agent to the Exchange server's PowerShell endpoint. Ensure firewall rules allow connections to the Exchange Connection URI.
 
-## Post-setup configuration
-After the all-in-one PowerShell script has run and created all the required resources. The following items need to be configured according to your own environment
- 1. Update the following [user defined variables](https://docs.helloid.com/hc/en-us/articles/360014169933-How-to-Create-and-Manage-User-Defined-Variables)
-<table>
-  <tr><td><strong>Variable name</strong></td><td><strong>Example value</strong></td><td><strong>Description</strong></td></tr>
-  <tr><td>ExchangeConnectionUri</td><td>********</td><td>Exchange server URI</td></tr>
-  <tr><td>ExchangeAdminUsername</td><td>domain/user</td><td>Exchange server admin account</td></tr>
-  <tr><td>ExchangeAdminPassword</td><td>********</td><td>Exchange server admin password</td></tr>
-</table>
+- **PowerShell Remoting**:<br>
+  PowerShell remoting must be enabled on the Exchange server. The connector uses New-PSSession to establish remote sessions with the Microsoft.Exchange configuration.
 
-## Manual resources
-This Delegated Form uses the following resources in order to run
+### Connection settings
 
-### Powershell data source 'Exchange-mailbox-add-email-address-get-mailbox'
-This Powershell data source runs a query to search for the mailbox.
+The following user-defined variables are used by the connector.
 
-### Powershell data source 'Exchange-mailbox-add-email-address-validate-address'
-This Powershell data source runs a query to search all existing emailaddress to verify the new emailaddress
+| Setting               | Description                                              | Mandatory |
+| --------------------- | -------------------------------------------------------- | --------- |
+| ExchangeConnectionUri | The URI to the Exchange PowerShell endpoint              | Yes       |
+| ExchangeAdminUsername | The username to connect to Exchange (domain\user format) | Yes       |
+| ExchangeAdminPassword | The password to connect to Exchange                      | Yes       |
 
-### Delegated form task 'Exchange on-premise - Mailbox add email address'
-This delegated form task adds the new Email Address to the mailbox
+## Remarks
+
+### Email Address Validation Logic
+
+The connector validates email addresses by checking all recipients (users, shared mailboxes, room mailboxes, etc.) in the Exchange environment. If the email address is already assigned to the selected mailbox, the validation passes since the address is already owned by that mailbox. If the email address is in use by a different recipient, the validation fails and displays which recipient is using the address.
+
+### ExchangeGuid Usage
+
+The connector uses ExchangeGuid instead of UserPrincipalName or other identifiers to reference mailboxes in the Set-Mailbox command. This ensures accurate mailbox identification even when UserPrincipalName or other attributes change.
+
+### Session Management
+
+All datasources and tasks use consistent session management with try-catch-finally blocks to ensure proper cleanup. Sessions are automatically disconnected even if errors occur during execution. Only required Exchange cmdlets are imported to minimize overhead.
+
+### Memory Optimization
+
+The connector selects only required mailbox properties to limit memory usage and improve query performance, especially in large Exchange environments with thousands of mailboxes.
+
+### Accepted Domains
+
+The mail domain selector automatically pre-selects the current domain of the selected mailbox when loading accepted domains, making it easier to add alternate addresses in the same domain.
+
+## Development resources
+
+### PowerShell cmdlets
+
+The following Exchange PowerShell cmdlets are used by the connector:
+
+| Cmdlet             | Description                                    | Used In                             |
+| ------------------ | ---------------------------------------------- | ----------------------------------- |
+| Get-Mailbox        | Retrieves mailbox information                  | Get-Usermailbox-Wildcard-Name-Alias |
+| Get-Recipient      | Retrieves recipient information for validation | Check-EmailAddress-Unique           |
+| Get-AcceptedDomain | Retrieves accepted mail domains                | Get-All-MailDomains                 |
+| Set-Mailbox        | Adds email address to mailbox                  | Task: Add email address             |
+
+### API documentation
+
+- [Exchange Server PowerShell (Exchange Management Shell)](https://learn.microsoft.com/en-us/powershell/exchange/exchange-management-shell)
+- [Connect to Exchange servers using remote PowerShell](https://learn.microsoft.com/en-us/powershell/exchange/connect-to-exchange-servers-using-remote-powershell)
+- [Get-Mailbox cmdlet reference](https://learn.microsoft.com/en-us/powershell/module/exchange/get-mailbox)
+- [Set-Mailbox cmdlet reference](https://learn.microsoft.com/en-us/powershell/module/exchange/set-mailbox)
+- [Get-Recipient cmdlet reference](https://learn.microsoft.com/en-us/powershell/module/exchange/get-recipient)
+- [Get-AcceptedDomain cmdlet reference](https://learn.microsoft.com/en-us/powershell/module/exchange/get-accepteddomain)
 
 ## Getting help
-_If you need help, feel free to ask questions on our [forum](https://forum.helloid.com/forum/helloid-connectors/service-automation/584-helloid-sa-exchange-on-premises-add-e-mail-address-to-mailbox)_
 
-## HelloID Docs
+> :bulb: **Tip:**  
+> _For more information on Delegated Forms, please refer to our [documentation](https://docs.helloid.com/en/service-automation/delegated-forms.html) pages_.
+
+## HelloID docs
+
 The official HelloID documentation can be found at: https://docs.helloid.com/
