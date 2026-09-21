@@ -641,8 +641,10 @@ Invoke-HelloIDDatasource -DatasourceName $dataSourceGuid_1_Name -DatasourceType 
 <# Begin: DataSource "exchange-on-premises-usermailbox-add-emailaddress | Exchange-On-Premises-Check-EmailAddress-Unique" #>
 $tmpPsScript = @'
 # variables configured in form
-$mailbox = $form.selectedmailbox
-$mailboxAddedEmailAddress = "$($form.mailPrefix)@$($form.mailDomain.id)"
+$mailbox = $datasource.selectedMailbox
+$mailPrefix = $datasource.mailPrefix
+$mailDomain = $datasource.mailDomain.id
+$PrimarySmtpAddress = "$mailPrefix@$mailDomain"
 
 # Build filter
 # Check for mailboxes matching the displayName, mailNickname (alias), primary email or proxy addresses
