@@ -1,128 +1,178 @@
 [
-    {
-        "label":  "Details",
-        "fields":  [
-                       {
-                           "key":  "searchMailbox",
-                           "templateOptions":  {
-                                                   "label":  "Search MailBox",
-                                                   "placeholder":  "",
-                                                   "required":  true
-                                               },
-                           "type":  "input",
-                           "summaryVisibility":  "Hide element",
-                           "requiresTemplateOptions":  true,
-                           "requiresKey":  true,
-                           "requiresDataSource":  false
-                       },
-                       {
-                           "key":  "gridMailbox",
-                           "templateOptions":  {
-                                                   "label":  "Mailbox",
-                                                   "required":  true,
-                                                   "grid":  {
-                                                                "columns":  [
-                                                                                {
-                                                                                    "headerName":  "Alias",
-                                                                                    "field":  "Alias"
-                                                                                },
-                                                                                {
-                                                                                    "headerName":  "User Principal Name",
-                                                                                    "field":  "UserPrincipalName"
-                                                                                },
-                                                                                {
-                                                                                    "headerName":  "Display Name",
-                                                                                    "field":  "displayName"
-                                                                                },
-                                                                                {
-                                                                                    "headerName":  "Distinguished Name",
-                                                                                    "field":  "DistinguishedName"
-                                                                                }
-                                                                            ],
-                                                                "height":  300,
-                                                                "rowSelection":  "single"
-                                                            },
-                                                   "dataSourceConfig":  {
-                                                                            "dataSourceGuid":  "$dataSourceGuid_0",
-                                                                            "input":  {
-                                                                                          "propertyInputs":  [
-                                                                                                                 {
-                                                                                                                     "propertyName":  "searchMailbox",
-                                                                                                                     "otherFieldValue":  {
-                                                                                                                                             "otherFieldKey":  "searchMailbox"
-                                                                                                                                         }
-                                                                                                                 }
-                                                                                                             ]
-                                                                                      }
-                                                                        },
-                                                   "useDefault":  false
-                                               },
-                           "type":  "grid",
-                           "summaryVisibility":  "Show",
-                           "requiresTemplateOptions":  true,
-                           "requiresKey":  true,
-                           "requiresDataSource":  true
-                       }
-                   ]
-    },
-    {
-        "label":  "NewEmail Address",
-        "fields":  [
-                       {
-                           "key":  "newEmail",
-                           "templateOptions":  {
-                                                   "label":  "New Emailaddress",
-                                                   "pattern":  "(?:[a-z0-9!#$%\u0026\u0027*+/=?^_{|}~-]+(?:\\.[a-z0-9!#$%\u0026\u0027*+/=?^_{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])",
-                                                   "required":  true
-                                               },
-                           "validation":  {
-                                              "messages":  {
-                                                               "pattern":  "Invalid email address"
-                                                           }
-                                          },
-                           "type":  "email",
-                           "summaryVisibility":  "Hide element",
-                           "requiresTemplateOptions":  true,
-                           "requiresKey":  true,
-                           "requiresDataSource":  false
-                       },
-                       {
-                           "key":  "newEmailResult",
-                           "templateOptions":  {
-                                                   "label":  "New Email address Result",
-                                                   "required":  true,
-                                                   "grid":  {
-                                                                "columns":  [
-                                                                                {
-                                                                                    "headerName":  "New E Mail Address",
-                                                                                    "field":  "NewEMailAddress"
-                                                                                }
-                                                                            ],
-                                                                "height":  300,
-                                                                "rowSelection":  "single"
-                                                            },
-                                                   "dataSourceConfig":  {
-                                                                            "dataSourceGuid":  "$dataSourceGuid_1",
-                                                                            "input":  {
-                                                                                          "propertyInputs":  [
-                                                                                                                 {
-                                                                                                                     "propertyName":  "newEmail",
-                                                                                                                     "otherFieldValue":  {
-                                                                                                                                             "otherFieldKey":  "newEmail"
-                                                                                                                                         }
-                                                                                                                 }
-                                                                                                             ]
-                                                                                      }
-                                                                        },
-                                                   "useFilter":  true,
-                                                   "useDefault":  false
-                                               },
-                           "type":  "grid",
-                           "summaryVisibility":  "Show",
-                           "requiresTemplateOptions":  true,
-                           "requiresKey":  true,
-                           "requiresDataSource":  true
-                       }
-                   ]
-    }
+  {
+    "label": "Select mailbox",
+    "fields": [
+      {
+        "key": "searchMailbox",
+        "templateOptions": {
+          "label": "Search Usermailbox",
+          "placeholder": "",
+          "required": true
+        },
+        "type": "input",
+        "summaryVisibility": "Show",
+        "requiresTemplateOptions": true,
+        "requiresKey": true,
+        "requiresDataSource": false
+      },
+      {
+        "key": "selectedmailbox",
+        "templateOptions": {
+          "label": "Select Usermailbox",
+          "required": true,
+          "grid": {
+            "columns": [
+              {
+                "headerName": "Display Name",
+                "field": "DisplayName"
+              },
+              {
+                "headerName": "Primary Smtp Address",
+                "field": "PrimarySmtpAddress"
+              },
+              {
+                "headerName": "User Principal Name",
+                "field": "UserPrincipalName"
+              },
+              {
+                "headerName": "Hidden From Address Lists Enabled",
+                "field": "HiddenFromAddressListsEnabled"
+              }
+            ],
+            "height": 300,
+            "rowSelection": "single"
+          },
+          "dataSourceConfig": {
+            "dataSourceGuid": "$dataSourceGuid_0",
+            "input": {
+              "propertyInputs": [
+                {
+                  "propertyName": "searchValue",
+                  "otherFieldValue": {
+                    "otherFieldKey": "searchMailbox"
+                  }
+                }
+              ]
+            }
+          },
+          "useDefault": false,
+          "allowCsvDownload": true
+        },
+        "type": "grid",
+        "summaryVisibility": "Show",
+        "requiresTemplateOptions": true,
+        "requiresKey": true,
+        "requiresDataSource": true
+      }
+    ]
+  },
+  {
+    "label": "Update mailbox",
+    "fields": [
+      {
+        "key": "formRow",
+        "templateOptions": {},
+        "fieldGroup": [
+          {
+            "key": "mailPrefix",
+            "templateOptions": {
+              "label": "Email address",
+              "minLength": 1,
+              "maxLength": 200,
+              "pattern": "^[A-Za-z0-9]([A-Za-z0-9._-]*[A-Za-z0-9])?$"
+            },
+            "type": "input",
+            "summaryVisibility": "Show",
+            "requiresTemplateOptions": true,
+            "requiresKey": true,
+            "requiresDataSource": false
+          },
+          {
+            "key": "mailDomain",
+            "templateOptions": {
+              "label": "Mail domain",
+              "required": true,
+              "useObjects": false,
+              "useDataSource": true,
+              "useFilter": false,
+              "options": [
+                "Option 1",
+                "Option 2",
+                "Option 3"
+              ],
+              "dataSourceConfig": {
+                "dataSourceGuid": "$dataSourceGuid_1",
+                "input": {
+                  "propertyInputs": [
+                    {
+                      "propertyName": "selectedMailbox",
+                      "otherFieldValue": {
+                        "otherFieldKey": "selectedmailbox"
+                      }
+                    }
+                  ]
+                }
+              },
+              "valueField": "Id",
+              "textField": "Id",
+              "defaultSelectorProperty": "Id",
+              "useDefault": true
+            },
+            "type": "dropdown",
+            "summaryVisibility": "Show",
+            "textOrLabel": "text",
+            "requiresTemplateOptions": true,
+            "requiresKey": true,
+            "requiresDataSource": false
+          }
+        ],
+        "type": "formrow",
+        "requiresTemplateOptions": true,
+        "requiresKey": true,
+        "requiresDataSource": false
+      },
+      {
+        "key": "mailValidation",
+        "templateOptions": {
+          "label": "Email address validation",
+          "placeholder": "Email address will be validated on uniqnueness in Exchange On-Premises",
+          "useDataSource": true,
+          "dataSourceConfig": {
+            "dataSourceGuid": "$dataSourceGuid_2",
+            "input": {
+              "propertyInputs": [
+                {
+                  "propertyName": "mailPrefix",
+                  "otherFieldValue": {
+                    "otherFieldKey": "mailPrefix"
+                  }
+                },
+                {
+                  "propertyName": "mailDomain",
+                  "otherFieldValue": {
+                    "otherFieldKey": "mailDomain"
+                  }
+                },
+                {
+                  "propertyName": "selectedMailbox",
+                  "otherFieldValue": {
+                    "otherFieldKey": "selectedmailbox"
+                  }
+                }
+              ]
+            }
+          },
+          "displayField": "output",
+          "pattern": "^Valid.*",
+          "readonly": true
+        },
+        "hideExpression": "!model[\"mailPrefix\"]",
+        "type": "input",
+        "summaryVisibility": "Show",
+        "requiresTemplateOptions": true,
+        "requiresKey": true,
+        "requiresDataSource": false
+      }
+    ]
+  }
 ]
